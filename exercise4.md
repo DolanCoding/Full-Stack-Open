@@ -3,10 +3,17 @@ sequenceDiagram
     participant browser
     participant server
 
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    Note left of server: Server creates a new note with the content of the message sent by the browser
+    activate server
+    server-->>browser: HTML document
+    deactivate server
+
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
     server-->>browser: HTML document
     deactivate server
+    Note right of browser: Responds with the HTML document including the new note.
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     activate server
