@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3001/api/persons";
+const baseUrl = "https://full-stack-open-x2o6.onrender.com/api/persons";
 
 const getAll = () => {
   return fetch(baseUrl).then((response) => response.json());
