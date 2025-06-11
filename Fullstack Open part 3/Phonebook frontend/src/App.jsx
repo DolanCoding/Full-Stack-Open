@@ -11,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [filteredPersons, setFilteredPersons] = useState([]);
 
   useEffect(() => {
@@ -23,8 +24,11 @@ const App = () => {
   useEffect(() => {
     setFilteredPersons(
       Array.isArray(persons)
-        ? persons.filter((person) =>
-            person.name.toLowerCase().includes(filter.toLowerCase())
+        ? persons.filter(
+            (person) =>
+              person &&
+              person.name &&
+              person.name.toLowerCase().includes(filter.toLowerCase())
           )
         : []
     );
@@ -32,23 +36,55 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault();
-    // Prevent duplicate names
-    if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
-      return;
-    }
+    setErrorMessage("");
+    setSuccessMessage("");
+    const existingPerson = persons.find((person) => person.name === newName);
     const personObject = {
       name: newName,
       number: newNumber,
-      // id will be assigned by the server
     };
-    personService.create(personObject).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setSuccessMessage(`Added ${returnedPerson.name} to phonebook!`);
-      setTimeout(() => setSuccessMessage(""), 2000);
-      setNewName("");
-      setNewNumber("");
-    });
+    if (existingPerson) {
+      // Update number in the database and update the entry in the frontend
+      personService
+        .update(existingPerson.id, { ...existingPerson, number: newNumber })
+        .then((returnedPerson) => {
+          setPersons(
+            persons.map((p) =>
+              p.id !== existingPerson.id ? p : returnedPerson
+            )
+          );
+          setSuccessMessage(`Updated ${returnedPerson.name}'s number!`);
+          setTimeout(() => setSuccessMessage(""), 2000);
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch(() => {
+          setErrorMessage("Validation error");
+          setTimeout(() => setErrorMessage(""), 3000);
+        });
+    } else {
+      // Create new entry in the database and add to the frontend
+      personService
+        .create(personObject)
+        .then((returnedPerson) => {
+          if (!returnedPerson || !returnedPerson.name) {
+            setErrorMessage(
+              "Could not add person - name has to be 3 chars at minimum!"
+            );
+            setTimeout(() => setErrorMessage(""), 3000);
+            return;
+          }
+          setPersons(persons.concat(returnedPerson));
+          setSuccessMessage(`Added ${returnedPerson.name} to phonebook!`);
+          setTimeout(() => setSuccessMessage(""), 2000);
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch(() => {
+          setErrorMessage("Validation error");
+          setTimeout(() => setErrorMessage(""), 3000);
+        });
+    }
   };
 
   const deletePerson = (id) => {
@@ -87,8 +123,15 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {successMessage && (
-        <div className="success-message">{successMessage}</div>
+      {errorMessage && (
+        <div className="error-message" style={{ color: "red" }}>
+          {errorMessage}
+        </div>
+      )}
+      {successMessage && !errorMessage && (
+        <div className="success-message" style={{ color: "green" }}>
+          {successMessage}
+        </div>
       )}
       <AddPersonForm
         addPerson={addPerson}
