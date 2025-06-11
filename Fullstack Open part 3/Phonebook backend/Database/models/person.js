@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
-const url =
-  process.env.MONGODB_URI ||
-  "mongodb+srv://<your-username>:<your-password>@<your-cluster-url>/phonebook?retryWrites=true&w=majority";
+const url = process.env.MONGODB_URI;
 
 mongoose.set("strictQuery", false);
 mongoose.connect(url);
