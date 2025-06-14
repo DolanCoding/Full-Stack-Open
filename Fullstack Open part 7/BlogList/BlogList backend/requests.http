@@ -1,0 +1,81 @@
+### Add User 1
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "dummyuser1",
+  "password": "password1"
+}
+
+### Add User 2
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "dummyuser2",
+  "password": "password2"
+}
+
+### Add User 3
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "dummyuser3",
+  "password": "password3"
+}
+
+### Add Blog 1 (associated with a user)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "First Blog Post",
+  "author": "Alice",
+  "url": "https://example.com/first",
+  "likes": 3
+}
+
+### Add Blog 2 (associated with a user)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Second Blog Post",
+  "author": "Bob",
+  "url": "https://example.com/second",
+  "likes": 7
+}
+
+### Add Blog 3 (associated with a user)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Third Blog Post",
+  "author": "Charlie",
+  "url": "https://example.com/third",
+  "likes": 0
+}
+
+### Add Blog 4 (associated with a user)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Fourth Blog Post",
+  "author": "Diana",
+  "url": "https://example.com/fourth",
+  "likes": 12
+}
+
+### Add Blog 5 (associated with a user)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Fifth Blog Post",
+  "author": "Eve",
+  "url": "https://example.com/fifth",
+  "likes": 1
+}
